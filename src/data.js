@@ -1,118 +1,64 @@
-const pokemones = './data/pokemon/pokemon.json';
-let data = '';
-fetch(pokemones)
-  .then(response => response.json())
-  .then(jsonData => {
-    //console.log(JSON.stringify(jsonData));
-    showData(jsonData);
-    return data = jsonData;
-  })
-  .catch(error => {
-    document.getElementById('root').innerHTML = 'Error: ' + error;
+window.pokemon = {
+filterType: (data, condition) =>{
+  const filteredType = data.filter(element => {
+    return element.type.includes(condition,0)
   });
- 
-const showData = (data) => {
-  let groupPokemon = '';
-  let dataPokedex = data.pokemon;
-    dataPokedex.forEach(function(element) { 
-      return groupPokemon += `<div class="card">
-           <img class="card-img-top" src=${element.img} alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">${element.name} #${element.id}</h5>
-              <p class="card-text"> Type: ${element.type.join(', ')}</p>
-              <p class="card-text"> Weaknesses: ${element.weaknesses.join(', ')}</p>
-          </div>
-          <div class="card-footer">
-            <small class="text-muted"> Hatches from egg: ${element.egg}</small>
-          </div>
-        </div>`
-    });
-    document.getElementById('root').innerHTML = groupPokemon;
-};
+  return filteredType;
+},
 
-const selectType = document.getElementById('type');
+sortData: (data, sortBy, sortOrder) =>{
+  if(sortBy === 'num' && sortOrder === 'des'){
+    const sortedNum = data.sort((a,b) => {
+      if (a.num < b.num) {
+        return 1;
+      }
+      if (a.num > b.num) {
+        return -1;
+      } else {
+      return 0;
+      }
+    })
+    return sortedNum;
+  }else if(sortBy === 'num' && sortOrder === 'asc'){
+    const sortedNum = data.sort((a,b) => {
+      if (a.num > b.num) {
+        return 1;
+      }
+      if (a.num < b.num) {
+        return -1;
+      } else {
+      return 0;
+      }
+    })
+    return sortedNum;
+  }else if(sortBy === 'name' && sortOrder === 'des'){
+    const sortedName = data.sort((a,b) => {
+      if (a.name < b.name) {
+        return 1;
+      }
+      if (a.name > b.name) {
+        return -1;
+      } else {
+      return 0;
+      }
+    })
+    return sortedName;
+  }else if(sortBy === 'name' && sortOrder === 'asc'){
+    const sortedName = data.sort((a,b) => {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      } else {
+      return 0;
+      }
+    })
+    return sortedName;
+  }
+},
 
-selectType.addEventListener('change', ()=> {
-  let condition = selectType.options[selectType.selectedIndex].value;
-  let filtered = window.filterType(data.pokemon, condition);
-  let filteredPokemon = '';
-  filtered.forEach(element => {
-    return filteredPokemon += `<div class="card">
-    <img class="card-img-top" src=${element.img} alt="Card image cap">
-   <div class="card-body">
-     <h5 class="card-title">${element.name} #${element.id}</h5>
-       <p class="card-text"> Type: ${element.type.join(', ')}</p>
-       <p class="card-text"> Weaknesses: ${element.weaknesses.join(', ')}</p>
-   </div>
-   <div class="card-footer">
-     <small class="text-muted"> Hatches from egg: ${element.egg}</small>
-   </div>
- </div>`
-  });
-  document.getElementById('root').innerHTML = filteredPokemon;
-});
-
-const selectAll = document.getElementById('all');
-
-selectAll.addEventListener('click', ()=>{
-  showData(data);
-});
-
-/*const selectAlphabetic = document.getElementById('alphabetic');
-
-selectAlphabetic.addEventListener('click', ()=>{
-  let sorted = window.sortData(data, sortBy, sortOrder)
-  let sortBy = data.pokemon;
-  let sortedPokemon = '';
-  sorted.forEach(element => {
-    return sortedPokemon += `<div class="card">
-    <img class="card-img-top" src=${element.img} alt="Card image cap">
-   <div class="card-body">
-     <h5 class="card-title">${element.name} #${element.id}</h5>
-       <p class="card-text"> Type: ${element.type.join(', ')}</p>
-       <p class="card-text"> Weaknesses: ${element.weaknesses.join(', ')}</p>
-   </div>
-   <div class="card-footer">
-     <small class="text-muted"> Hatches from egg: ${element.egg}</small>
-   </div>
- </div>`
-  });
-  document.getElementById('root').innerHTML = sortedPokemon;
-});
-*/
-
-const selectNumeric = document.getElementById('numericDes');
-
-selectNumeric.addEventListener('click', ()=>{
-  let sorted = window.sortData(data, sortBy, sortOrder)
-  let sortBy = data.pokemon.number;
-  let sortOrder = 'des';
-  let sortedPokemon = '';
-  sorted.forEach(element => {
-    return sortedPokemon += `<div class="card">
-    <img class="card-img-top" src=${element.img} alt="Card image cap">
-   <div class="card-body">
-     <h5 class="card-title">${element.name} #${element.id}</h5>
-       <p class="card-text"> Type: ${element.type.join(', ')}</p>
-       <p class="card-text"> Weaknesses: ${element.weaknesses.join(', ')}</p>
-   </div>
-   <div class="card-footer">
-     <small class="text-muted"> Hatches from egg: ${element.egg}</small>
-   </div>
- </div>`
-  });
-  document.getElementById('root').innerHTML = sortedPokemon;
-});
-
-
-
-/*
-sortData(data, sortBy, sortOrder) El primer parámetro, data, nos entrega los datos. 
-El segundo parámetro, sortBy, nos dice con respecto a cuál de los campos de la data 
-se quiere ordenar. El tercer parámetro, sortOrder, indica si se quiere 
-ordenar de manera ascendente o descendente.
-
-computeStats(data) nos permitirá hacer cálculos estadísticos básicos para ser
- mostrados de acuerdo a la data proporcionada.
-*/
-
+computeStats: (data) => {
+  return data.length;
+  }
+}
